@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useToast } from './ToastContext'
 
 const ScanningContext = createContext()
 
@@ -11,6 +12,7 @@ export const useScanning = () => {
 }
 
 export const ScanningProvider = ({ children }) => {
+  const { showSuccess } = useToast()
   const [scanStatus, setScanStatus] = useState({
     isScanning: false,
     scanType: '',
@@ -39,6 +41,9 @@ export const ScanningProvider = ({ children }) => {
       
       window.cyberGuard.onNetworkScanDone((result) => {
         try {
+          // Show completion toast
+          showSuccess('✅ Network scan completed successfully!', { duration: 3000 })
+          
           setScanStatus({
             isScanning: false,
             scanType: '',
@@ -68,6 +73,9 @@ export const ScanningProvider = ({ children }) => {
 
       window.cyberGuard.onPortScanDone((result) => {
         try {
+          // Show completion toast
+          showSuccess('✅ Port scan completed successfully!', { duration: 3000 })
+          
           setScanStatus({
             isScanning: false,
             scanType: '',
@@ -87,6 +95,9 @@ export const ScanningProvider = ({ children }) => {
   const startNetworkScan = async (target) => {
     try {
       if (window.cyberGuard) {
+        // Show brief scan start toast
+        showSuccess('🔍 Network scan started!', { duration: 2000 })
+        
         setScanStatus({
           isScanning: true,
           scanType: 'Network Scan',
@@ -114,6 +125,9 @@ export const ScanningProvider = ({ children }) => {
   const startPortScan = async (target) => {
     try {
       if (window.cyberGuard) {
+        // Show brief scan start toast
+        showSuccess('🔍 Port scan started!', { duration: 2000 })
+        
         setScanStatus({
           isScanning: true,
           scanType: 'Port Scan',
